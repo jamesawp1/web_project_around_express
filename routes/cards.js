@@ -8,6 +8,10 @@ fs.readFile(dataPath, { encoding: "utf8" }, (err, data) => {
   const cards = JSON.parse(data);
 
   cardsRouter.get("/", (req, res) => {
+    if (!cards) {
+      res.status(404).send({ message: "Recurso requisitado não encontrado" });
+    }
+
     res.send(cards);
   });
 });

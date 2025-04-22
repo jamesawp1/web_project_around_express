@@ -9,6 +9,10 @@ fs.readFile(dataPath, { encoding: "utf8" }, (err, data) => {
   const users = JSON.parse(data);
 
   usersRouter.get("/", (req, res) => {
+    if (!users) {
+      res.status(404).send({ message: "Recurso requisitado não encontrado" });
+    }
+
     res.send(users);
   });
 
