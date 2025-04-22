@@ -6,14 +6,14 @@ const app = express();
 
 const { usersRouter } = require("./routes/users");
 
-app.use("/", usersRouter);
+const { cardsRouter } = require("./routes/cards");
+
+app.use("/users", usersRouter);
+
+app.use("/cards", cardsRouter);
 
 app.get("/", (req, res) => {
   res.status(404).send({ message: "A solicitação não foi encontrada." });
-});
-
-app.get("/cards", (req, res) => {
-  res.send("cards");
 });
 
 app.listen(PORT, () => {
