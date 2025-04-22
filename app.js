@@ -6,7 +6,7 @@ const app = express();
 
 const { usersRouter } = require("./routes/users");
 
-app.use("/users", usersRouter);
+app.use("/", usersRouter);
 
 app.get("/", (req, res) => {
   res.status(404).send({ message: "A solicitação não foi encontrada." });
