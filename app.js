@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { PORT = 3000, BASE_PATH } = process.env;
+const { PORT = 3000, BASE_PATH = "default" } = process.env;
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use("/users", usersRouter);
 
 app.use("/cards", cardsRouter);
 
-app.get("/", (req, res) => {
+app.use((req, res) => {
   res.status(404).send({ message: "A solicitação não foi encontrada." });
 });
 
