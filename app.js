@@ -7,6 +7,8 @@ const app = express();
 
 mongoose.connect("mongodb://localhost:27017/aroundb");
 
+app.use(express.json());
+
 const { usersRouter } = require("./routes/users");
 
 const { cardsRouter } = require("./routes/cards");
@@ -15,7 +17,7 @@ app.use("/users", usersRouter);
 
 app.use("/cards", cardsRouter);
 
-app.use((req, res) => {
+app.use("/", (req, res) => {
   res.status(404).send({ message: "A solicitação não foi encontrada." });
 });
 

@@ -17,5 +17,7 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(404).send({ data: err.message }));
+    .catch((err) => {
+      res.status(404).send({ data: err.message });
+    });
 };
