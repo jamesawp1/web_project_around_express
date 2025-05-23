@@ -7,18 +7,18 @@ const SERVER_ERROR = 500;
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate("user")
-    .then((films) => {
-      if (!films) {
+    .then((cards) => {
+      if (!cards) {
         return res
           .status(DATA_NOT_FOUND)
           .send({ message: `Cartões não encontrados.` });
       }
-      return res.send({ data: films });
+      return res.send({ data: cards });
     })
     .catch((err) => {
-      res
-        .status(SERVER_ERROR)
-        .send({ message: `Não foi possível obter os cartões. ERRO: ${err}` });
+      res.status(SERVER_ERROR).send({
+        message: `Não foi possível finalizar a solicitação. ERRO: ${err}`,
+      });
     });
 };
 
@@ -56,7 +56,7 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       res.status(SERVER_ERROR).send({
-        data: `Não foi possível excluir o cartão. ERRO: ${err}`,
+        message: `Não foi possível excluir o cartão. ERRO: ${err}`,
       });
     });
 };
