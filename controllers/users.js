@@ -38,7 +38,7 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .orFail(new Error("Um dos campos de dados do usuário é inválido."))
+    .orFail(new Error("Um dos campos de dados é inválido."))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.message.startsWith("Um dos campos")) {
@@ -47,6 +47,42 @@ module.exports.createUser = (req, res) => {
 
       return res.status(SERVER_ERROR).send({
         message: `Não foi possível completar a solicitação para a criação de um novo usuário. ERRO: ${err}`,
+      });
+    });
+};
+
+module.exports.updateProfileInfo = (req, res) => {
+  const { userId } = req.user._id;
+  const { name, about } = req.body;
+
+  User.findByIdAndUpdate(userId, { name, about })
+    .orFail(new Error("Um dos campos de dados é inválido."))
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.message.startsWith("Um dos campos")) {
+        return res.status(INVALID_DATA).send({ message: err.message });
+      }
+
+      return res.status(SERVER_ERROR).send({
+        message: `Não foi possível completar a solicitação para a atualização informacional do usuário. ERRO: ${err}`,
+      });
+    });
+};
+
+module.exports.updateProfileAvatar = (req, res) => {
+  const { userId } = req.user._id;
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(userId, { avatar })
+    .orFail(new Error("O campo de dado é inválido."))
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.message.startsWith("O campo de")) {
+        return res.status(INVALID_DATA).send({ message: err.message });
+      }
+
+      return res.status(SERVER_ERROR).send({
+        message: `Não foi possível completar a solicitação para a atualização da foto do usuário. ERRO: ${err}`,
       });
     });
 };
