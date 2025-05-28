@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
-
-const regex = {
-  user: /https?:\/\/(www\.)?[a-zA-Z0-9-]{2,}\.[a-zA-Z]{2,}\/?([^\s]*)\/?/gm,
-};
+const { urlRegex } = require("../utils/utils");
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -16,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return regex.user.test(v);
+        return urlRegex.test(v);
       },
       message: "É necessário um link válido.",
     },

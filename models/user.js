@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-const regex = {
-  avatar: /https?:\/\/(www\.)?[a-zA-Z0-9-]{2,}\.[a-zA-Z]{2,}\/?([^\s]*)\/?/gm,
-};
+const { urlRegex } = require("../utils/utils");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -22,7 +20,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return regex.avatar.test(v);
+        return urlRegex.test(v);
       },
       message: "É necessário um link válido.",
     },
