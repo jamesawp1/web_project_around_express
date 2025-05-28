@@ -1,10 +1,7 @@
+const mongoose = require("mongoose");
 const User = require("../models/user");
 
-const {
-  INVALID_DATA,
-  DATA_NOT_FOUND,
-  SERVER_ERROR,
-} = require("../utils/utils");
+const { INVALID_DATA, DATA_NOT_FOUND, SERVER_ERROR } = require("../utils/utils");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -17,10 +14,15 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findById(req.params.userId)
+  const { userId } = req.params;
+  User.findById(userId)
     .orFail(new Error("Usuário não encontrado."))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(INVALID_DATA).send({ message: "ID fornecido inválido." });
+      }
+
       if (err.message.startsWith("Usuário não")) {
         return res.status(DATA_NOT_FOUND).send({ message: err.message });
       }
