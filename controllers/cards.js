@@ -1,9 +1,10 @@
+const mongoose = require("mongoose");
 const Card = require("../models/card");
-const { DATA_NOT_FOUND, SERVER_ERROR } = require("../utils/utils");
+const { INVALID_DATA, DATA_NOT_FOUND, SERVER_ERROR } = require("../utils/utils");
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .populate(["owner", "likes"])
+    .populate([])
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
       res.status(SERVER_ERROR).send({
@@ -26,12 +27,16 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  const { id: cardId } = req.params;
+  const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
     .orFail(new Error(`Cartão não encontrado. Id do cartão: ${cardId}.`))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
+      if (!mongoose.Types.ObjectId.isValid(cardId)) {
+        return res.status(INVALID_DATA).send({ message: "ID do cartão fornecido é inválido." });
+      }
+
       if (err.message.startsWith("Cartão não")) {
         return res.status(DATA_NOT_FOUND).send({ message: err.message });
       }
@@ -43,12 +48,16 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.likeCard = (req, res) => {
-  const { id: cardId } = req.params;
+  const { cardId } = req.params;
 
   Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail(new Error("Cartão não encontrado."))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
+      if (!mongoose.Types.ObjectId.isValid(cardId)) {
+        return res.status(INVALID_DATA).send({ message: "ID do cartão fornecido é inválido." });
+      }
+
       if (err.message.startsWith("Cartão não")) {
         return res.status(DATA_NOT_FOUND).send({ message: err.message });
       }
@@ -60,12 +69,16 @@ module.exports.likeCard = (req, res) => {
 };
 
 module.exports.dislikeCard = (req, res) => {
-  const { id: cardId } = req.params;
+  const { cardId } = req.params;
 
   Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { new: true })
     .orFail(new Error("Cartão não encontrado."))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
+      if (!mongoose.Types.ObjectId.isValid(cardId)) {
+        return res.status(INVALID_DATA).send({ message: "ID do cartão fornecido é inválido." });
+      }
+
       if (err.message.startsWith("Cartão não")) {
         return res.status(DATA_NOT_FOUND).send({ message: err.message });
       }
