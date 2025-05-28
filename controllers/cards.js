@@ -6,7 +6,7 @@ const SERVER_ERROR = 500;
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .populate("user")
+    .populate(["owner", "likes"])
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
       res.status(SERVER_ERROR).send({
