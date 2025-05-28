@@ -1,8 +1,5 @@
 const Card = require("../models/card");
-
-const INVALID_DATA = 400;
-const DATA_NOT_FOUND = 404;
-const SERVER_ERROR = 500;
+const { DATA_NOT_FOUND, SERVER_ERROR } = require("../utils/utils");
 
 module.exports.getCards = (req, res) => {
   Card.find({})

@@ -1,8 +1,10 @@
 const User = require("../models/user");
 
-const INVALID_DATA = 400;
-const DATA_NOT_FOUND = 404;
-const SERVER_ERROR = 500;
+const {
+  INVALID_DATA,
+  DATA_NOT_FOUND,
+  SERVER_ERROR,
+} = require("../utils/utils");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
